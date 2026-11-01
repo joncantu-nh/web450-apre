@@ -78,4 +78,26 @@ router.get('/regions/:region', (req, res, next) => {
   }
 });
 
+// Fetch total sales for each month, keeping different years separate.
+// Some sales use saleDate; use it when date is missing or null.
+router.get('/monthly', (req, res, next) => {
+  try {
+    mongo(async db => {
+      const monthlySales = await db.collection('sales').aggregate([
+        {
+          $group: {
+            _id: { $dateToString: { format: '%Y-%m', date: { $toDate: { $ifNull: ['$date', '$saleDate'] } } } },
+            totalSales: { $sum: '$amount' }
+          }
+        },
+        { $project: { _id: 0, month: '$_id', totalSales: 1 } },
+        { $sort: { month: 1 } }
+      ]).toArray();
+      res.send(monthlySales);
+    }, next);
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

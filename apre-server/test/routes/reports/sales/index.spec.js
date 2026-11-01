@@ -143,3 +143,64 @@ describe('Apre Sales Report API - Sales by Region', () => {
     });
   });
 });
+
+describe('Apre Sales Report API - Monthly Sales', () => {
+  let collection;
+  let aggregate;
+  let toArray;
+
+  beforeEach(() => {
+    toArray = jest.fn();
+    aggregate = jest.fn().mockReturnValue({ toArray });
+    collection = jest.fn().mockReturnValue({ aggregate });
+    mongo.mockImplementation(async (callback, next) => {
+      try {
+        await callback({ collection });
+      } catch (err) {
+        next(err);
+      }
+    });
+  });
+
+  it('should fetch monthly totals in date order using saleDate when date is missing', async () => {
+    const sales = [
+      { month: '2025-01', totalSales: 1000 },
+      { month: '2026-01', totalSales: 1500 }
+    ];
+    toArray.mockResolvedValue(sales);
+
+    const response = await request(app).get('/api/reports/sales/monthly');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(sales);
+    expect(collection).toHaveBeenCalledWith('sales');
+    expect(aggregate).toHaveBeenCalledWith([
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m', date: { $toDate: { $ifNull: ['$date', '$saleDate'] } } } },
+          totalSales: { $sum: '$amount' }
+        }
+      },
+      { $project: { _id: 0, month: '$_id', totalSales: 1 } },
+      { $sort: { month: 1 } }
+    ]);
+  });
+
+  it('should return an empty array when there are no sales', async () => {
+    toArray.mockResolvedValue([]);
+
+    const response = await request(app).get('/api/reports/sales/monthly');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+  });
+
+  it('should return 500 when the database operation fails', async () => {
+    toArray.mockRejectedValue(new Error('Database unavailable'));
+
+    const response = await request(app).get('/api/reports/sales/monthly');
+
+    expect(response.status).toBe(500);
+    expect(response.body.message).toBe('Database unavailable');
+  });
+});

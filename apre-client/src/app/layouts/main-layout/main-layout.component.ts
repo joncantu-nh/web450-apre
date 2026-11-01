@@ -305,6 +305,7 @@ export class MainLayoutComponent {
 
   // Array to hold the sales reports links in the side menu. These links are visible to all users
   salesReports = [
+    { name: 'Monthly Sales', url: '/reports/sales/monthly-sales' },
     { name: 'Sales by Region', url: '/reports/sales/sales-by-region' },
     { name: 'Sales by Region - Tabular', url: '/reports/sales/sales-by-region-tabular' },
     // Add more reports as needed
