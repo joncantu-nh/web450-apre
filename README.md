@@ -103,3 +103,20 @@ npm run build
 
 The starter server currently reads its MongoDB Atlas connection settings from `apre-server/src/utils/config.js`. The API can start and return its root response even if database-backed features are unavailable; successful unit tests do not necessarily confirm a live database connection.
 
+
+## WEB450 Assignment 3.3 — M-085: Agent Performance by Month
+
+Start the API with `cd apre-server && npm ci && npm run dev` and the client in a
+second terminal with `cd apre-client && npm ci && npm start` (from the repository
+root). Sign in and choose **Agent Performance by Month** in the sidebar, or open
+`http://localhost:4200/reports/agent-performance/performance-by-month`.
+Select a month and year and submit to display a bar chart of each agent's average performance.
+The existing Call Duration by Date Range report remains available.
+
+### API and calculation
+
+`GET /api/reports/agent-performance/performance-by-month?month=1&year=2023`
+requires an integer month from 1 (January) to 12 (December) and a four-digit
+year (1000–9999). Missing or invalid months or years return HTTP 400; database failures return HTTP 500. No matching records
+return an empty array. Successful results contain `agentId`, `name`, and
+`averagePerformance`, sorted by agent name and ID.

@@ -312,6 +312,7 @@ export class MainLayoutComponent {
   ];
 
   agentPerformanceReports = [
+    { name: 'Agent Performance by Month', url: '/reports/agent-performance/performance-by-month' },
     { name: 'Call Duration by Date Range', url: '/reports/agent-performance/call-duration-by-date-range' }
     // Add more reports as needed
   ];

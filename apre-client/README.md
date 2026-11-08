@@ -25,3 +25,12 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+
+## Agent Performance by Month Report
+`/reports/agent-performance/performance-by-month` and in the Agent Performance
+Reports sidebar. Select a month and year to chart average performance by agent for that period. 
+
+Performance records without a matching agent remain visible using labels such as
+`Agent 1024 (name unavailable)`. This preserves report data without inventing
+agent names or modifying the database.
