@@ -27,7 +27,8 @@ import { CookieService } from 'ngx-cookie-service';
           <label for="password" class="signin__label">Password</label>
           <input id="password" formControlName="password" type="password" class="signin__input" />
         </div>
-        <input type="submit" class="signin__button" Value="Submit" />
+        <!-- m-030: Add a native tooltip to clarify the submit button's sign-in action. -->
+        <input type="submit" class="signin__button" Value="Submit" title="Click to sign in" />
       </form>
       <a href="/" class="signin__return-link">Return to Home</a>
     </div>
